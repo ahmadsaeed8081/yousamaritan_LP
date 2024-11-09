@@ -22,7 +22,7 @@ const About = () => {
           
             </h2>
             <p className=" tw-text-black   tw-leading-8 tw-pt-4 tw-text-xl">
-            You will need tokens in your wallet to engage. Once you purchase SMT tokens, make sure that you add the SMT token to your MetaMask/TrustWallet Wallet so you can view your Smaritan balance.  </p>
+            You will need tokens in your wallet to engage. Once you purchase SMT tokens, make sure that you add the SMT token to your MetaMask/TrustWallet Wallet so you can view your Samaritan balance.  </p>
             </li>
             <li>
             <h2 className="  tw-text-textColor tw-font-bold tw-font-syne tw-pt-4">

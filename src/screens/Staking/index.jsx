@@ -78,10 +78,10 @@ const Staking = ({setHeroData,setStatment, set_refCount,set_refEarning}) => {
 
 
   const APRList = [
-    { value: "3", lbl: "365 Days" ,APR: "144%" },
-    { value: "2", lbl: "270 Days"  ,APR: "108%" },
-    { value: "1", lbl: "180 Days"  ,APR: "72%" },
-    { value: "0", lbl: "90 Days"  ,APR: "36%" },
+    { value: "3", lbl: "360 Days" ,APR: "144%" },
+    { value: "2", lbl: "270 Days"  ,APR: "81%" },
+    { value: "1", lbl: "180 Days"  ,APR: "36%" },
+    { value: "0", lbl: "90 Days"  ,APR: "9%" },
 
 
 
@@ -224,7 +224,9 @@ const Staking = ({setHeroData,setStatment, set_refCount,set_refEarning}) => {
   const [min_stake, set_min_stake] = useState(0);
   const [perTokenPrice, set_perTokenPrice] = useState(0);
 
+  const [totalLevelEarning, set_totalLevelEarning] = useState(0);
 
+  const [LevelEarning, set_LevelEarning] = useState(0);
 
   const [curr_stage, set_curr_stage] = useState();
   const [curr_StageTime, set_curr_StageTime] = useState(0);
@@ -248,7 +250,6 @@ useEffect(()=>
       set_ref(params.get("ref"))
 
     }
-
     test();
   }
 
@@ -289,9 +290,10 @@ useEffect(()=>
       
       console.log(allInvestments);
         allInvestments_reward = await staking_contract.methods.getAll_investments_forReward().call({from: address});
-       let ref_earn = await staking_contract.methods.referralLevel_earning(address).call();    
-       let ref_count = await staking_contract.methods.referralLevel_count(address).call();    
+      //  let ref_earn = await staking_contract.methods.referralLevel_earning(address).call();    
+       let ref_count = await staking_contract.methods.referralLevel_count(address).call(); 
 
+       let data = await staking_contract.methods.Level_earning(address).call();    
        let l1_statement = await staking_contract.methods.get_refStatement(address,0).call();    
        let l2_statement = await staking_contract.methods.get_refStatement(address,1).call();    
        let l3_statement = await staking_contract.methods.get_refStatement(address,2).call();    
@@ -299,19 +301,14 @@ useEffect(()=>
        let l5_statement = await staking_contract.methods.get_refStatement(address,4).call();      
         perTokenPrice = await staking_contract.methods.get_pertokenPrice().call();   
 
-      //  set_l1_statement(l1_statement)
-      //  set_l2_statement(l2_statement)
-      //  set_l3_statement(l3_statement)
-      //  set_l4_statement(l4_statement)
-      //  set_l5_statement(l5_statement)
-
-       setStatment(l1_statement,l2_statement,l3_statement,l4_statement,l5_statement,user[7],user[8])
-       setHeroData(user?user[1]:0,totalEarning,user?user[2]:0,)
-       set_refEarning(ref_earn)
+        set_totalLevelEarning(data[1])
+       setStatment(l1_statement,l2_statement,l3_statement,l4_statement,l5_statement,user[7],user[8],perTokenPrice)
+       setHeroData(user?user[1]:0,totalEarning,user?user[2]:0,perTokenPrice,data[1])
+       set_refEarning(data.arr1)
        set_refCount(ref_count)
+       set_totalEarning(totalEarning + data[1] );
 
-       set_isCso(user[1])
-       set_isEmb(user[2])
+   
 
       }
   
@@ -325,7 +322,6 @@ useEffect(()=>
 
     set_MATICBalance(balance)
 
-    set_totalEarning(totalEarning);
     set_curr_time(currTime)
     set_TokenBalance(USDTBalance);
     set_perTokenPrice(perTokenPrice);
@@ -432,16 +428,16 @@ async function claim1() {
         abi: staking_abi,
         address: staking_address,
         functionName: "withdrawReward", 
-        // args: [
-        //   Number(selectedOption4[3])
-        // ],
+        args: [
+          totalLevelEarning,"8798789798798"
+        ],
 
       });
 
       set_count(1)
 
   } catch (err) {
-      console.error(err);
+      console.error("rew prob");
   }
 }
 
@@ -451,7 +447,6 @@ useEffect(()=>{
   {
     if(count==0)
     {
-      alert("jkkjb")
       stake1()
 
     }
@@ -735,8 +730,8 @@ useEffect(()=>{
           </div>
 
           <div className="tw-flex p-4  tw-justify-between tw-items-center">
-            <p className="tw-m-0  tw-text-textColor  tw-font-zen-dots">Total Stake</p>
-            <p className="tw-m-0  tw-font-zen-dots tw-text-textColor ">  {totalInvestment?(Number(totalInvestment)/10**18):0} SMT</p>
+            <p className="tw-m-0  tw-text-textColor  tw-font-zen-dots">Penalty</p>
+            <p className="tw-m-0  tw-font-zen-dots tw-text-textColor ">  10%</p>
           </div>
 
           <div className="tw-flex-col tw-flex tw-justify-between tw-h-96 tw-p-6 tw-py-10">
@@ -751,7 +746,7 @@ useEffect(()=>{
                     className="tw-border-textColor tw-flex tw-justify-between tw-border tw-w-full tw-text-black tw-py-4 tw-items-center tw-px-4 tw-rounded-md tw-text-[17.15px] tw-leading-3"
                   >
                     <p className="tw-m-0 tw-border-textColor">
-                    {selectedOption3 ? Number(selectedOption3[0])/10**18:"Select an option"}
+                    {selectedOption3 ? Convert_To_eth(selectedOption3[0]):"Select an option"}
                     </p>
                     <p className="tw-m-0">
                     <TiArrowSortedDown color="black" size={20} />
@@ -773,7 +768,7 @@ useEffect(()=>{
                         }}
                           className="tw-py-2 tw-px-4 tw-cursor-pointer tw-text-black hover:tw-bg-button-gradient"
                         >
-                          {Number(item[0])/10**18}
+                          {Convert_To_eth(item[0])}
                         </li>
                       ))
                       ):(null)}
@@ -866,7 +861,7 @@ useEffect(()=>{
                       className="tw-border-textColor tw-flex tw-justify-between tw-border tw-w-full tw-text-black tw-py-4 tw-items-center tw-px-4 tw-rounded-md tw-text-[17.15px] tw-leading-3"
                     >
                       <p className="tw-m-0 tw-border-textColor">
-                      {selectedOption4 ? Number(selectedOption4[0])/10**18:"Select an option"}
+                      {selectedOption4 ? Convert_To_eth(selectedOption4[0]):"Select an option"}
                       </p>
                       <p className="tw-m-0">
                       <TiArrowSortedDown color="black" size={20} />
@@ -882,7 +877,7 @@ useEffect(()=>{
                           onClick={() => handleOption4Click(item)}
                           className="tw-py-2 tw-px-4 tw-cursor-pointer tw-text-black hover:tw-bg-button-gradient"
                         >
-                          {Number(item[0])/10**18}
+                          {Convert_To_eth(item[0])}
 
                         </li>
                       ))

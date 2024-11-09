@@ -15,8 +15,9 @@ const Home = () => {
   const [cso_earning, set_cso_earning] = useState(0);
   const [emb_earning, set_emb_earning] = useState(0);
 
+  const [perTokenPrice, set_perTokenPrice] = useState(0);
 
-  function setStatment(l1,l2,l3,l4,l5,e1,e2)
+  function setStatment(l1,l2,l3,l4,l5,e1,e2,p1)
   {
     set_l1_statement(l1)
     set_l2_statement(l2)
@@ -25,6 +26,7 @@ const Home = () => {
     set_l5_statement(l5)
     set_cso_earning(e1)
     set_emb_earning(e2)
+    set_perTokenPrice(p1)
   }
 
   return (
@@ -39,7 +41,7 @@ const Home = () => {
           </h2>
         </div>
 
-        <Brands emb_earning={emb_earning} cso_earning={cso_earning} refCount={refCount} refEarning={refEarning} l1_statement={l1_statement} l5_statement={l5_statement} l2_statement={l2_statement} l3_statement={l3_statement} l4_statement={l4_statement} />
+        <Brands perTokenPrice={perTokenPrice} emb_earning={emb_earning} cso_earning={cso_earning} refCount={refCount} refEarning={refEarning} l1_statement={l1_statement} l5_statement={l5_statement} l2_statement={l2_statement} l3_statement={l3_statement} l4_statement={l4_statement} />
 
         <div className=" tw-absolute tw-left-0  tw-bottom-[30%]">
           <img

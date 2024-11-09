@@ -1,20 +1,20 @@
 
-export const ebm_address="0x9092962cfdbF63147e0DBe03CA3e39c4BFC8324E"
-export const usdt_address="0x9092962cfdbF63147e0DBe03CA3e39c4BFC8324E";
+export const ebm_address="0x7Ed2D0e9C1a7F9f51115e0e70BDB55E7D652e35c"
+export const usdt_address="0x51a61EC45a849360580Daaa52b1a30D699D1BB32";
 
-export const staking_address="0x3751C15244510f990c55e982b136c08cA47e5dd0";
+export const staking_address="0x2F649661064917da1e63741e9e2f2F521f305f94";
 
 
 export const staking_abi=[
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_add",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
 			}
 		],
-		"name": "set_CSO",
+		"name": "setID",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -22,12 +22,12 @@ export const staking_abi=[
 	{
 		"inputs": [
 			{
-				"internalType": "address",
-				"name": "_add",
-				"type": "address"
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
 			}
 		],
-		"name": "set_EMB",
+		"name": "setSMTPrice",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -75,7 +75,13 @@ export const staking_abi=[
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
 		"stateMutability": "nonpayable",
 		"type": "constructor"
 	},
@@ -112,7 +118,18 @@ export const staking_abi=[
 		"type": "function"
 	},
 	{
-		"inputs": [],
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "level_rew",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id",
+				"type": "uint256"
+			}
+		],
 		"name": "withdrawReward",
 		"outputs": [
 			{
@@ -151,25 +168,6 @@ export const staking_abi=[
 				"type": "uint256"
 			}
 		],
-		"name": "Cso_arr",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"name": "details",
 		"outputs": [
 			{
@@ -180,6 +178,11 @@ export const staking_abi=[
 			{
 				"internalType": "uint256",
 				"name": "APR",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "minim",
 				"type": "uint256"
 			}
 		],
@@ -207,25 +210,6 @@ export const staking_abi=[
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"name": "Emb_arr",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -414,6 +398,11 @@ export const staking_abi=[
 						"internalType": "uint256",
 						"name": "pending_rew",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "perTokenPrice",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct Yousamaritan_LP.allInvestments[]",
@@ -479,37 +468,16 @@ export const staking_abi=[
 						"internalType": "uint256",
 						"name": "pending_rew",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "perTokenPrice",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct Yousamaritan_LP.allInvestments[]",
 				"name": "Invested",
 				"type": "tuple[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getallCso",
-		"outputs": [
-			{
-				"internalType": "address[]",
-				"name": "_arr",
-				"type": "address[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getallEmb",
-		"outputs": [
-			{
-				"internalType": "address[]",
-				"name": "_arr",
-				"type": "address[]"
 			}
 		],
 		"stateMutability": "view",
@@ -553,6 +521,30 @@ export const staking_abi=[
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "inv",
+				"type": "address"
+			}
+		],
+		"name": "Level_earning",
+		"outputs": [
+			{
+				"internalType": "uint256[3]",
+				"name": "arr1",
+				"type": "uint256[3]"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "owner",
 		"outputs": [
@@ -581,6 +573,58 @@ export const staking_abi=[
 	{
 		"inputs": [],
 		"name": "per_day_divider",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "percentageOf",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "noOfInvestment",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalInvestment",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "totalWithdraw_reward",
+				"type": "uint256"
+			},
+			{
+				"internalType": "bool",
+				"name": "investBefore",
+				"type": "bool"
+			},
+			{
+				"internalType": "address",
+				"name": "upliner",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "perSMTPrice",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -702,26 +746,6 @@ export const staking_abi=[
 				"internalType": "address",
 				"name": "upliner",
 				"type": "address"
-			},
-			{
-				"internalType": "bool",
-				"name": "isCso",
-				"type": "bool"
-			},
-			{
-				"internalType": "bool",
-				"name": "isEmb",
-				"type": "bool"
-			},
-			{
-				"internalType": "uint256",
-				"name": "Cso_Earning",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "Emb_Earning",
-				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",

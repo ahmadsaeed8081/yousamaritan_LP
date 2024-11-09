@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import HeroPopup from "../../screens/HeroPopup";
-
-const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_statement,l3_statement, l4_statement, l5_statement }) => {
+import Web3 from "web3";
+const Brands = ({emb_earning, cso_earning,perTokenPrice,refCount,refEarning,l1_statement,l2_statement,l3_statement, l4_statement, l5_statement }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +15,25 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+
+  function convert_to_usdt(_val)
+  {
+    let usdt_amount = Number(_val) * (Convert_To_eth(perTokenPrice));
+    return usdt_amount.toFixed(10).replace(/\.?0+$/,"")  ;
+  
+  }
+
+
+  function Convert_To_eth(val) {
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider("https://polygon.meowrpc.com")
+    );
+
+    val = web3.utils.fromWei(val.toString(), "ether");
+    return val;
+  }
+
 
   return (
 
@@ -37,7 +56,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold" onClick={()=>handleToggle(1)} >{refEarning?Number(refEarning[0])/10**18:0}</span>
+                    <span className="tw-text-textColor  tw-font-semibold"  >{refEarning?convert_to_usdt(Number(refEarning[0])/10**18):0} DAI</span>
                     <span className="tw-text-textColor tw-font-semibold">{refCount?Number(refCount[0]):0}</span>
                   </div>
                 </div>
@@ -52,7 +71,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                   </div>
                 </div>
                 <h4 className=" tw-text-[#456DA7] tw-text-[28px] tw-mt-2 tw-font-semibold tw-text-center">
-                   Level 01
+                   Level 02
                 </h4>
                 <div className="tw-w-full tw-flex-col tw-flex tw-justify-between tw-items-center">
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full tw-my-2">
@@ -60,7 +79,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold" onClick={()=>handleToggle(2)} >{refEarning?Number(refEarning[1])/10**18:0}</span>
+                    <span className="tw-text-textColor  tw-font-semibold" >{refEarning?convert_to_usdt(Number(refEarning[1])/10**18):0} DAI</span>
                     <span className="tw-text-textColor tw-font-semibold">{refCount?Number(refCount[1]):0}</span>
                   </div>
                 </div>
@@ -83,12 +102,12 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold" onClick={()=>handleToggle(3)} >{refEarning?Number(refEarning[2])/10**18:0}</span>
+                    <span className="tw-text-textColor  tw-font-semibold" >{refEarning?convert_to_usdt(Number(refEarning[2])/10**18):0} DAI</span>
                     <span className="tw-text-textColor tw-font-semibold">{refCount?Number(refCount[2]):0}</span>
                   </div>
                 </div>
               </div>
-              <div
+              {/* <div
               
                 className="tw-border tw-p-4 tw-w-80 tw-rounded-tr-3xl tw-rounded-bl-3xl tw-border-textColor"
               >
@@ -98,7 +117,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                   </div>
                 </div>
                 <h4 className=" tw-text-[#456DA7] tw-text-[28px] tw-mt-2 tw-font-semibold tw-text-center">
-                chief sales officer
+                Philanthropist
                 </h4>
                 <div className="tw-w-full tw-flex-col tw-flex tw-justify-between tw-items-center">
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full tw-my-2">
@@ -106,7 +125,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold" onClick={()=>handleToggle(4)} >{cso_earning?Number(cso_earning):0}</span>
+                    <span className="tw-text-textColor  tw-font-semibold" onClick={()=>handleToggle(4)} >{cso_earning?Number(cso_earning):0} SMT</span>
                     <span className="tw-text-textColor tw-font-semibold">02</span>
                   </div>
                 </div>
@@ -121,7 +140,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                   </div>
                 </div>
                 <h4 className=" tw-text-[#456DA7] tw-text-[28px] tw-mt-2 tw-font-semibold tw-text-center">
-                Brand Ambassador
+                Good Samaritan
                 </h4>
                 <div className="tw-w-full tw-flex-col tw-flex tw-justify-between tw-items-center">
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full tw-my-2">
@@ -133,7 +152,7 @@ const Brands = ({emb_earning, cso_earning,refCount,refEarning,l1_statement,l2_st
                     <span className="tw-text-textColor tw-font-semibold">02</span>
                   </div>
                 </div>
-              </div>
+              </div> */}
     </div>
 
     <HeroPopup setIsModalOpen={setIsModalOpen} isModalOpen={isModalOpen}  data={choosed_statement==1 ? l1_statement : choosed_statement==2 ? l2_statement : choosed_statement==3 ? l3_statement : choosed_statement==4 ? l4_statement:choosed_statement==5 ? l5_statement:null}/>

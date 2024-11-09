@@ -10,6 +10,7 @@ import {
 } from "react-copy-to-clipboard";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Web3 from "web3";
 const Hero = ({setStatment, set_refCount,set_refEarning}) => {
   const [selectedCurrency, setSelectedCurrency] = useState("MATIC");
 
@@ -19,6 +20,7 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
   const [totalInvestment, set_totalInvestment] = useState(0);
   const [totalEarning, set_totalEarning] = useState(0);
   const [perTokenPrice, set_perTokenPrice] = useState(0);
+  const [levelEarning, setlevelEarning] = useState(0);
 
   const handleSelect = (currency) => {
     setSelectedCurrency(currency);
@@ -51,20 +53,28 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
 
   function convert_to_usdt(_val)
   {
-    let usdt_amount = Number(_val) * (Number(perTokenPrice)/10**18);
+    let usdt_amount = Number(_val) * (Convert_To_eth(perTokenPrice));
     return usdt_amount.toFixed(10).replace(/\.?0+$/,"")  ;
   
   }
 
-  function setHeroData(v1,v2,v3,v4)
+  function setHeroData(v1,v2,v3,v4,lE)
   {
     set_availBalance(v2)
     set_totalInvestment(v1)
     set_totalEarning(v3+v2)
     set_perTokenPrice(v4)
+    setlevelEarning(lE)
   }
 
+  function Convert_To_eth(val) {
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider("https://polygon.meowrpc.com")
+    );
 
+    val = web3.utils.fromWei(val.toString(), "ether");
+    return val;
+  }
   return (
     <div className="   tw-bg-cover tw-relative tw-bg-center tw-w-full tw-h-auto">
       <Header />
@@ -92,19 +102,31 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
                   </h6>
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
-                    {totalInvestment>0 ? Number(totalInvestment)/10**18:0}
+                    {totalInvestment>0 ? Convert_To_eth(totalInvestment):0} SMT
                   </span>
                 </div>
               </div>
               <div className=" col-md-6">
                 <div className=" tw-border  tw-border-textColor tw-rounded-bl-3xl  tw-rounded-tr-3xl  p-4">
                   <h6 className="  tw-text-textColor  tw-font-poppins">
-                    Total Earnings
+                    Total ROI Earning
                   </h6>
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
-                    {totalEarning>0 ? Number(totalEarning)/10**18:0}
+                    {totalEarning>0 ?(convert_to_usdt ( Convert_To_eth(totalEarning))):0} DAI
 
+                  </span>
+                </div>
+              </div>
+
+              <div className=" col-md-6">
+                <div className=" tw-border  tw-border-textColor tw-rounded-bl-3xl  tw-rounded-tr-3xl  p-4">
+                  <h6 className="   tw-text-textColor tw-font-poppins">
+                    Total Ref Earning
+                  </h6>
+                  <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
+                    {" "}
+                    {levelEarning>0 ? convert_to_usdt(Convert_To_eth(levelEarning)):0} DAI
                   </span>
                 </div>
               </div>
@@ -116,22 +138,12 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
 
-                    {availBalance>0 ? Number(availBalance)/10**18:0}
+                    {availBalance>0 ? convert_to_usdt(Convert_To_eth(availBalance)):0} DAI
 
                   </span>
                 </div>
               </div>
-              <div className=" col-md-6">
-                <div className=" tw-border  tw-border-textColor tw-rounded-bl-3xl  tw-rounded-tr-3xl  p-4">
-                  <h6 className="   tw-text-textColor tw-font-poppins">
-                    Total Directs
-                  </h6>
-                  <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
-                    {" "}
-                    0
-                  </span>
-                </div>
-              </div>
+
               <div className=" col-md-12">
                 <div className=" tw-border  tw-border-textColor tw-rounded-bl-3xl  tw-rounded-tr-3xl  p-4">
                   <h6 className="  tw-text-textColor  tw-font-poppins tw-flex tw-gap-3 tw-items-center">
