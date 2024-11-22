@@ -273,8 +273,7 @@ interface Token {
                 depTime=depTime/per_day_divider; //1 day
                 if(depTime>0)
                 {
-                     rew  =  ((((user[_add].investment[i].investedAmount * ((user[_add].investment[i].apr) *10**18) )/ (100*10**18) )/(user[_add].investment[i].timeframe)) * user[msg.sender].investment[i].perTokenPrice) / (10**18);
-
+                    rew  =  ((((user[_add].investment[i].investedAmount * ((user[_add].investment[i].apr) *10**18) )/ (100*10**18) )/(user[_add].investment[i].timeframe)) * user[msg.sender].investment[i].perTokenPrice) / (10**18);
 
                     totalReward += depTime * rew;
                 }
@@ -303,31 +302,54 @@ interface Token {
                         next_member_count+=user[direct_members[k]].directs.length;
                         for(uint i=0;i<user[direct_members[k]].noOfInvestment;i++)
                         {
+                            uint depTime;
                             uint temp_amount = user[direct_members[k]].investment[i].investedAmount;
-
-                            if(j==0)
+                            if(!user[direct_members[k]].investment[i].unstake)
                             {
-                                if(user[direct_members[k]].investment[i].apr==9)
+                                if(block.timestamp < user[direct_members[k]].investment[i].withdrawnTime)
                                 {
-                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[0]) ) / (100 ether) );
+                                    if(block.timestamp < user[direct_members[k]].investment[i].withdrawnTime)
+                                    {
+                                        depTime =block.timestamp - user[direct_members[k]].investment[i].DepositTime;
+                                    }
+                                    else
+                                    {    
+                                        depTime =user[direct_members[k]].investment[i].withdrawnTime - user[direct_members[k]].investment[i].DepositTime;
+                                    }                        
                                 }
-                                else if(user[direct_members[k]].investment[i].apr==36)
-                                {
-                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[1]) ) / (100 ether) );
-                                }                                
-                                else if(user[direct_members[k]].investment[i].apr==81)
-                                {
-                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[2]) ) / (100 ether) );
-                                }
-                                else if(user[direct_members[k]].investment[i].apr==144)
-                                {
-                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[3]) ) / (100 ether) );
-                                }
+                                else
+                                {    
+                                    depTime =user[direct_members[k]].investment[i].withdrawnTime - user[direct_members[k]].investment[i].DepositTime;
+                                }     
                             }
                             else
                             {
-                                calc_rew +=  ((temp_amount * (levelpercentage[j]) ) / (100 ether) );
+                                depTime =user[direct_members[k]].investment[i].unstakeTime - user[direct_members[k]].investment[i].DepositTime;
                             }
+                            
+                            depTime=depTime/per_day_divider; //1 day
+                            if(depTime>0)
+                            {
+                                if(j==0)
+                                {
+                                    
+                                    uint temp = depTime *  ((temp_amount * (user[direct_members[k]].investment[i].level1_percentage) ) / (100 ether) )/(user[direct_members[k]].investment[i].timeframe);
+                                    calc_rew += (temp * user[direct_members[k]].investment[i].perTokenPrice)/10**18;
+                                }
+                                else if(j==1)
+                                {
+                                    uint temp =  ((temp_amount * (user[direct_members[k]].investment[i].level2_percentage) ) / (100 ether) )/(user[direct_members[k]].investment[i].timeframe);
+                                    calc_rew += (temp * user[direct_members[k]].investment[i].perTokenPrice)/10**18;
+
+                                }
+                                else if(j==2)
+                                {
+                                    uint temp =  ((temp_amount * (user[direct_members[k]].investment[i].level3_percentage) ) / (100 ether) )/(user[direct_members[k]].investment[i].timeframe);
+                                    calc_rew += (temp * user[direct_members[k]].investment[i].perTokenPrice)/10**18;
+
+                                }
+                            }
+
 
                         }
                         
@@ -335,7 +357,7 @@ interface Token {
 
                     }
 
-                    totalEarned+=calc_rew;
+                    totalEarned+= (calc_rew);
                     levelRewards[j]=calc_rew;
                     calc_rew=0;
 

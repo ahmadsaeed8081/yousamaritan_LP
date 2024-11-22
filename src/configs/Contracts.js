@@ -2,7 +2,7 @@
 export const ebm_address="0x7Ed2D0e9C1a7F9f51115e0e70BDB55E7D652e35c"
 export const usdt_address="0x51a61EC45a849360580Daaa52b1a30D699D1BB32";
 
-export const staking_address="0xceE150cfBA0a68A446e5695272A990751075fc77";
+export const staking_address="0x07a62dd7E6fd006c629482a5E70a2fd0e7092164";
 
 
 export const staking_abi=[

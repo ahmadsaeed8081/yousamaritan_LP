@@ -128,7 +128,7 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
                   </h6>
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
-                    {levelEarning>0 ? (Convert_To_eth(levelEarning)):0} DAI
+                    {levelEarning>0 ? ((Number(levelEarning))/10**18).toFixed(4):0} DAI
                   </span>
                 </div>
               </div>

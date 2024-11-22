@@ -56,7 +56,7 @@ const Brands = ({emb_earning, cso_earning,perTokenPrice,refCount,refEarning,l1_s
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold"  >{refEarning?convert_to_usdt(Number(refEarning[0])/10**18):0} DAI</span>
+                    <span className="tw-text-textColor  tw-font-semibold"  >{refEarning?(Number(refEarning[0])/10**18).toFixed(4):0} DAI</span>
                     <span className="tw-text-textColor tw-font-semibold">{refCount?Number(refCount[0]):0}</span>
                   </div>
                 </div>
@@ -79,7 +79,7 @@ const Brands = ({emb_earning, cso_earning,perTokenPrice,refCount,refEarning,l1_s
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold" >{refEarning?convert_to_usdt(Number(refEarning[1])/10**18):0} DAI</span>
+                    <span className="tw-text-textColor  tw-font-semibold" >{refEarning?(Number(refEarning[1])/10**18).toFixed(4):0} DAI</span>
                     <span className="tw-text-textColor tw-font-semibold">{refCount?Number(refCount[1]):0}</span>
                   </div>
                 </div>
@@ -102,7 +102,7 @@ const Brands = ({emb_earning, cso_earning,perTokenPrice,refCount,refEarning,l1_s
                     <span className="tw-text-textColor tw-font-semibold ">Team</span>
                   </div>
                   <div className="tw-flex tw-justify-between tw-items-center tw-w-full">
-                    <span className="tw-text-textColor  tw-font-semibold" >{refEarning?convert_to_usdt(Number(refEarning[2])/10**18):0} DAI</span>
+                    <span className="tw-text-textColor  tw-font-semibold" >{refEarning?(Number(refEarning[2])/10**18).toFixed(4):0} DAI</span>
                     <span className="tw-text-textColor tw-font-semibold">{refCount?Number(refCount[2]):0}</span>
                   </div>
                 </div>
