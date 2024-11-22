@@ -238,7 +238,7 @@ const Staking = ({setHeroData,setStatment, set_refCount,set_refEarning}) => {
 
   const [LevelEarning, set_LevelEarning] = useState(0);
 
-  const [curr_stage, set_curr_stage] = useState();
+  const [penalty, set_penalty] = useState();
   const [curr_StageTime, set_curr_StageTime] = useState(0);
   const [curr_presale, set_curr_presale] = useState([]);
   const [perTokenIn_Matic, set_perTokenIn_Matic] = useState(0);
@@ -325,9 +325,12 @@ useEffect(()=>
 
     //staking 
     perTokenPrice = await staking_contract.methods.get_Curr_pertokenPrice().call();   
+    let penalty = await staking_contract.methods.penalty().call();   
+
     let currTime = await staking_contract.methods.get_currTime().call();    
     let totalusers = await staking_contract.methods.totalusers().call();    
     let totalbusiness = await staking_contract.methods.getTotalInvestment().call();
+    
     for(let j=0;j<4;j++)
     {
        let detail = await staking_contract.methods.details(j).call();
@@ -339,7 +342,7 @@ useEffect(()=>
     }
     set_APRList(details)
     set_MATICBalance(balance)
-
+    set_penalty(penalty)
     set_curr_time(currTime)
     set_TokenBalance(USDTBalance);
     set_perTokenPrice(perTokenPrice);
@@ -757,7 +760,7 @@ useEffect(()=>{
 
           <div className="tw-flex p-4  tw-justify-between tw-items-center">
             <p className="tw-m-0  tw-text-textColor  tw-font-zen-dots">Penalty</p>
-            <p className="tw-m-0  tw-font-zen-dots tw-text-textColor ">  10%</p>
+            <p className="tw-m-0  tw-font-zen-dots tw-text-textColor "> { Number(penalty)/10**18 }%</p>
           </div>
 
           <div className="tw-flex-col tw-flex tw-justify-between tw-h-96 tw-p-6 tw-py-10">
@@ -794,7 +797,7 @@ useEffect(()=>{
                         }}
                           className="tw-py-2 tw-px-4 tw-cursor-pointer tw-text-black hover:tw-bg-button-gradient"
                         >
-                          {Convert_To_eth(item[0])}
+                          {Convert_To_eth(item[0])} SMT
                         </li>
                       ))
                       ):(null)}
