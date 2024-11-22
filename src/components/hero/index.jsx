@@ -106,14 +106,16 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
                   </span>
                 </div>
               </div>
+
               <div className=" col-md-6">
                 <div className=" tw-border  tw-border-textColor tw-rounded-bl-3xl  tw-rounded-tr-3xl  p-4">
                   <h6 className="  tw-text-textColor  tw-font-poppins">
-                    Total ROI Earning
+                    Total Bonus Earning
                   </h6>
+                  
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
-                    {totalEarning>0 ?(convert_to_usdt ( Convert_To_eth(totalEarning))):0} DAI
+                    {totalEarning>0 ?( ( Convert_To_eth(totalEarning))):0} DAI
 
                   </span>
                 </div>
@@ -126,7 +128,7 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
                   </h6>
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
-                    {levelEarning>0 ? convert_to_usdt(Convert_To_eth(levelEarning)):0} DAI
+                    {levelEarning>0 ? (Convert_To_eth(levelEarning)):0} DAI
                   </span>
                 </div>
               </div>
@@ -138,7 +140,7 @@ const Hero = ({setStatment, set_refCount,set_refEarning}) => {
                   <span className="  tw-text-textColor tw-font-poppins tw-text-lg">
                     {" "}
 
-                    {availBalance>0 ? convert_to_usdt(Convert_To_eth(availBalance)):0} DAI
+                    {availBalance>0 ? (Convert_To_eth(availBalance)):0} DAI
 
                   </span>
                 </div>

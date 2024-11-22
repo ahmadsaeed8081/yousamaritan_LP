@@ -2,7 +2,7 @@
 export const ebm_address="0x7Ed2D0e9C1a7F9f51115e0e70BDB55E7D652e35c"
 export const usdt_address="0x51a61EC45a849360580Daaa52b1a30D699D1BB32";
 
-export const staking_address="0x2F649661064917da1e63741e9e2f2F521f305f94";
+export const staking_address="0x2f61663d9Dc1fc26dd45dd48f3178e7008fCA1AC";
 
 
 export const staking_abi=[
@@ -108,6 +108,104 @@ export const staking_abi=[
 		"inputs": [
 			{
 				"internalType": "uint256",
+				"name": "no",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
+			}
+		],
+		"name": "Updtae_FirstRefLevelPercentage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
+			}
+		],
+		"name": "Updtae_penaltyFeePercentage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "no",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
+			}
+		],
+		"name": "Updtae_RefLevelPercentage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "no",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
+			}
+		],
+		"name": "Updtae_staking_APR",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "no",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
+			}
+		],
+		"name": "Updtae_staking_MinInvestment",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "val",
+				"type": "uint256"
+			}
+		],
+		"name": "Updtae_withdrawFeePercentage",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
 				"name": "_amount",
 				"type": "uint256"
 			}
@@ -182,7 +280,7 @@ export const staking_abi=[
 			},
 			{
 				"internalType": "uint256",
-				"name": "minim",
+				"name": "minimum_amount",
 				"type": "uint256"
 			}
 		],
@@ -210,6 +308,19 @@ export const staking_abi=[
 				"internalType": "bool",
 				"name": "",
 				"type": "bool"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "get_Curr_pertokenPrice",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "price",
+				"type": "uint256"
 			}
 		],
 		"stateMutability": "view",
@@ -246,19 +357,6 @@ export const staking_abi=[
 			{
 				"internalType": "uint256",
 				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "get_pertokenPrice",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "price",
 				"type": "uint256"
 			}
 		],
@@ -403,6 +501,21 @@ export const staking_abi=[
 						"internalType": "uint256",
 						"name": "perTokenPrice",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "level1_percentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "level2_percentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "level3_percentage",
+						"type": "uint256"
 					}
 				],
 				"internalType": "struct Yousamaritan_LP.allInvestments[]",
@@ -472,6 +585,21 @@ export const staking_abi=[
 					{
 						"internalType": "uint256",
 						"name": "perTokenPrice",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "level1_percentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "level2_percentage",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "level3_percentage",
 						"type": "uint256"
 					}
 				],
@@ -648,25 +776,6 @@ export const staking_abi=[
 			{
 				"internalType": "uint256[]",
 				"name": "_arr",
-				"type": "uint256[]"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_add",
-				"type": "address"
-			}
-		],
-		"name": "referralLevel_earning",
-		"outputs": [
-			{
-				"internalType": "uint256[]",
-				"name": "arr1",
 				"type": "uint256[]"
 			}
 		],

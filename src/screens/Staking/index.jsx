@@ -77,17 +77,27 @@ const Staking = ({setHeroData,setStatment, set_refCount,set_refEarning}) => {
   const options4 = ["7.78", "44.23", "3.54"];
 
 
-  const APRList = [
-    { value: "3", lbl: "360 Days" ,APR: "144%" },
-    { value: "2", lbl: "270 Days"  ,APR: "81%" },
-    { value: "1", lbl: "180 Days"  ,APR: "36%" },
-    { value: "0", lbl: "90 Days"  ,APR: "9%" },
+  // const APRList = [
+  //   { value: "3", lbl: "360 Days" ,APR: "144%" },
+  //   { value: "2", lbl: "270 Days"  ,APR: "81%" },
+  //   { value: "1", lbl: "180 Days"  ,APR: "36%" },
+  //   { value: "0", lbl: "90 Days"  ,APR: "9%" },
 
 
 
 
-  ];
-  const [ selectedAPR,set_selectedAPR] = useState(APRList[0])
+  // ];
+  const [ APRList,set_APRList] = useState([
+    { value: "0", lbl: "90 Days"  ,APR: "9",min:0 },
+    { value: "1", lbl: "180 Days"  ,APR: "36",min:0 },
+    { value: "2", lbl: "270 Days"  ,APR: "81",min:0 },
+    { value: "3", lbl: "360 Days" ,APR: "144",min:0 },
+
+
+
+  ])
+
+  const [ selectedAPR,set_selectedAPR] = useState(APRList[3])
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -276,6 +286,7 @@ useEffect(()=>
     let allInvestments_reward;
     let balance;
     let perTokenPrice
+    let details=APRList;
     if(isConnected)
     {
        balance  =await  web3.eth.getBalance(address)
@@ -288,9 +299,7 @@ useEffect(()=>
        user = await staking_contract.methods.user(address).call();      
        allInvestments = await staking_contract.methods.getAll_investments().call({from: address});
       
-      console.log(allInvestments);
         allInvestments_reward = await staking_contract.methods.getAll_investments_forReward().call({from: address});
-      //  let ref_earn = await staking_contract.methods.referralLevel_earning(address).call();    
        let ref_count = await staking_contract.methods.referralLevel_count(address).call(); 
 
        let data = await staking_contract.methods.Level_earning(address).call();    
@@ -299,7 +308,7 @@ useEffect(()=>
        let l3_statement = await staking_contract.methods.get_refStatement(address,2).call();    
        let l4_statement = await staking_contract.methods.get_refStatement(address,3).call();    
        let l5_statement = await staking_contract.methods.get_refStatement(address,4).call();      
-        perTokenPrice = await staking_contract.methods.get_pertokenPrice().call();   
+        perTokenPrice = await staking_contract.methods.get_Curr_pertokenPrice().call();   
 
         set_totalLevelEarning(data[1])
        setStatment(l1_statement,l2_statement,l3_statement,l4_statement,l5_statement,user[7],user[8],perTokenPrice)
@@ -315,11 +324,20 @@ useEffect(()=>
 
 
     //staking 
-     perTokenPrice = await staking_contract.methods.get_pertokenPrice().call();   
+    perTokenPrice = await staking_contract.methods.get_Curr_pertokenPrice().call();   
     let currTime = await staking_contract.methods.get_currTime().call();    
     let totalusers = await staking_contract.methods.totalusers().call();    
     let totalbusiness = await staking_contract.methods.getTotalInvestment().call();
+    for(let j=0;j<4;j++)
+    {
+       let detail = await staking_contract.methods.details(j).call();
+       console.log( detail)
+       details[j].APR=Number(detail[1]);
+       details[j].min=Number(detail[2])/10**18;
 
+
+    }
+    set_APRList(details)
     set_MATICBalance(balance)
 
     set_curr_time(currTime)
@@ -525,9 +543,9 @@ useEffect(()=>{
       return;
     }
 
-    if(Number(stakeAmount)<Number(min_stake)/10**18 )
+    if(((((Number(stakeAmount))*(Number(perTokenPrice)/10**18)))) < Number(selectedAPR.min) )
     {
-      alert("Minimum Stake amount is "+ Number(min_stake)/10**18);
+      alert("Minimum Stake amount is "+ Number(selectedAPR.min) +" DAI worth of SMT");
       return;
     }
 
@@ -623,8 +641,16 @@ useEffect(()=>{
           
             <div className="tw-flex  tw-justify-between tw-items-center">
               <p className="tw-m-0  tw-text-md tw-text-textColor text-semibold tw-font-poppins "> Obligation</p>
-              <p className="tw-m-0   text-bold tw-font-poppins tw-text-textColor tw-text-md">{selectedAPR.APR }</p>
+              <p className="tw-m-0   text-bold tw-font-poppins tw-text-textColor tw-text-md">{selectedAPR.APR }%</p>
             </div>
+            <div className="tw-flex  tw-justify-between tw-items-center">
+              <p className="tw-m-0  tw-text-md tw-text-textColor text-semibold tw-font-poppins "> Min Investment</p>
+              <p className="tw-m-0   text-bold tw-font-poppins tw-text-textColor tw-text-md">{selectedAPR.min } DAI</p>
+            </div>
+            <div className="tw-flex  tw-pt-7   tw-gap-2  tw-justify-between tw-items-center">
+            <p className="tw-m-0 tw-font-poppins tw-text-md tw-border-textColor"> DAI Value:</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-md tw-border-textColor">$ {((((Number(stakeAmount))*(Number(perTokenPrice)/10**18))).toFixed(2))}</p>
+          </div>
            </div>
 
             <div className="tw-flex-col tw-flex tw-justify-between tw-h-96 tw-p-6 tw-py-10">
@@ -778,41 +804,11 @@ useEffect(()=>{
                   )}
                 </div>
                 <StakingCounter time={selectedOption3 ? Number(selectedOption3[1]):0}/>
+                <div className="tw-flex  tw-pt-7   tw-gap-2  tw-justify-between tw-items-center">
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor"> DAI Value:</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor">$ {selectedOption3 ?( ((((Number(selectedOption3[0]))*(Number(selectedOption3[10])))/10**36).toFixed(2))):0}</p>
+          </div>
 
-           {/* <div className=" tw-pt-2.5 tw-flex  tw-gap-2  tw-justify-end">
-            <div className=" tw-flex tw-flex-wrap tw-gap-1">
-              <div className="  tw-gap-1   tw-w-7 tw-justify-center  tw-font-poppins tw-rounded-sm tw-flex tw-items-center tw-bg-button-gradient">
-                <p className=" tw-m-0 tw-text-sm tw-text-white tw-font-poppins tw-font-semibold">{String(timeLeft.days).padStart(2, '0')}</p>
-              </div>
-
-              <p className=" tw-m-0 tw-text-sm tw-text-textColor   tw-font-poppins">Days</p>
-
-            </div>
-            <div className=" tw-flex tw-flex-wrap tw-justify-center tw-gap-1">
-              <div className="  tw-gap-1   tw-w-6  tw-justify-center  tw-rounded-sm tw-flex tw-items-center tw-bg-button-gradient">
-                <p className=" tw-m-0 tw-text-white tw-font-poppins">{String(timeLeft.hours).padStart(2, '0')}</p>
-              </div>
-
-              <p className=" tw-m-0 tw-text-sm tw-text-textColor ">Hours</p>
-
-            </div>
-            <div className=" tw-flex tw-flex-wrap tw-justify-center tw-gap-1">
-              <div className="  tw-gap-1   tw-w-6  tw-justify-center  tw-rounded-sm tw-flex tw-items-center tw-bg-button-gradient">
-                <p className=" text-white tw-font-poppins tw-m-0 ">{String(timeLeft.minutes).padStart(2, '0')}</p>
-              </div>
-
-              <p className=" tw-m-0 tw-text-sm tw-text-textColor  tw-font-poppins">Minutes</p>
-
-            </div>
-            <div className=" tw-flex tw-flex-wrap tw-justify-center tw-gap-1">
-              <div className="  tw-gap-1   tw-w-6  tw-justify-center  tw-rounded-sm tw-flex tw-items-center tw-bg-button-gradient">
-                <p className=" tw-m-0 tw-text-white tw-font-poppins">   {String(timeLeft.seconds).padStart(2, '0')}</p>
-              </div>
-
-              <p className=" tw-m-0 tw-text-sm tw-text-textColor  tw-font-poppins">Second</p>
-
-            </div>
-           </div> */}
              </div>
             <div>
               <Button  onClick={unstake}  label={"Disengage"} className={"tw-w-full  text-white tw-font-zen-dots"} />
@@ -836,17 +832,17 @@ useEffect(()=>{
 
           <div className="tw-flex px-4   tw-justify-between tw-items-center">
             <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-textColor">Total Earning</p>
-            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-[#2E94CB]">$ {totalEarning?convert_to_usdt ( ((Number(totalEarning)/10**18) + (Number(totalwithdraw)/10**18))):0}</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-[#2E94CB]">$ {totalEarning? ( ((Number(totalEarning)/10**18) + (Number(totalwithdraw)/10**18)).toFixed(2)):0}</p>
           </div>
 
 
           <div className="tw-flex px-4  tw-pt-1 tw-justify-between tw-items-center">
             <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-textColor">Total withdraw</p>
-            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-[#2E94CB]">$ {totalwithdraw? convert_to_usdt((Number(totalwithdraw)/10**18)):0}</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-[#2E94CB]">$ {totalwithdraw? ((Number(totalwithdraw)/10**18).toFixed(2)):0}</p>
           </div>
           <div className="tw-flex px-4  tw-pt-1 tw-justify-between tw-items-center">
             <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-textColor">Available Balance</p>
-            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-[#2E94CB]">$ {totalEarning?convert_to_usdt( (Number(totalEarning)/10**18).toFixed(2)):0}</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-text-[#2E94CB]">$ {totalEarning?( (Number(totalEarning)/10**18).toFixed(2)):0}</p>
           </div>
           <div className="tw-flex-col   tw-flex tw-justify-between tw-h-96 tw-p-6 tw-py-10">
              <div>
@@ -890,13 +886,13 @@ useEffect(()=>{
            </div>
            <div className="tw-flex  tw-pt-7   tw-gap-2  tw-justify-between tw-items-center">
             <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor"> Earn Reward:</p>
-            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor">$ {selectedOption4 ?( convert_to_usdt((Number(selectedOption4[6])/10**18).toFixed(2))):0}</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor">$ {selectedOption4 ?( ((Number(selectedOption4[6])/10**18).toFixed(2))):0}</p>
           </div>
 
 
           <div className="tw-flex  tw-pt-7   tw-gap-2  tw-justify-between tw-items-center">
             <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor"> Pending Reward:</p>
-            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor">$ {selectedOption4 ? convert_to_usdt((Number(selectedOption4[9])/10**18).toFixed(2)):0}</p>
+            <p className="tw-m-0 tw-font-poppins tw-text-sm tw-border-textColor">$ {selectedOption4 ? ((Number(selectedOption4[9])/10**18).toFixed(2)):0}</p>
           </div>
          
              </div>

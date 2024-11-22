@@ -8,33 +8,35 @@ interface Token {
       function balanceOf(address account) external view returns (uint256);
     function allowance(address owner, address spender) external view returns (uint256);
 
-    }
-    interface Presale {
+}
+    interface Presale 
+    {
         function get_curr_Stage() external view returns (uint);
 
     }
 
-contract Yousamaritan_LP
+    contract Yousamaritan_LP
     {
         uint[10] price_arr =[0.00000001611 ether, 0.00000002549 ether, 0.00000004033 ether,0.00000006382 ether, 0.00000010098 ether, 0.00000015979 ether,0.00000025283 ether, 0.00000040005 ether, 0.00000063300 ether, 0.00000100160 ether];
 
         address  public owner;
-        address Staking_token=0x9092962cfdbF63147e0DBe03CA3e39c4BFC8324E; //YouSamaritan
-        address Reward_Token=0x341343568948459e5b7017eDDb05110cfA3EF699; // DAI
-        address Presale_contract=0xeB4710354a8cbcEb0A2C3Aa30725E4bB4aE59Da7; // presale
+        address Staking_token = 0x7Ed2D0e9C1a7F9f51115e0e70BDB55E7D652e35c; //YouSamaritan
+        address Reward_Token = 0x51a61EC45a849360580Daaa52b1a30D699D1BB32; // DAI
+        address Presale_contract = 0xeB4710354a8cbcEb0A2C3Aa30725E4bB4aE59Da7; // presale
 
 
 
         uint public totalusers;
+        uint private id;
+
         // uint public per_day_divider= 1 days;
         uint public per_day_divider= 1 minutes;
         uint public totalbusiness; 
-        uint public withdrawFee= 6 ether; 
+        uint public withdrawFee= 6 *10**6; 
         uint public penalty= 10 ether; 
         bool public doubleToken_promo;
         bool public doublDirectPercentage_promo;
-        address[] public Cso_arr;
-        address[] public Emb_arr;
+
 
         mapping(uint=>address) public All_investors;
 
@@ -51,16 +53,16 @@ contract Yousamaritan_LP
             uint timeframe;
             uint pending_rew;
             uint perTokenPrice;
+            uint level1_percentage;
+            uint level2_percentage;
+            uint level3_percentage;
 
         }
 
 
         struct ref_data
         {
-
-            uint earning;
             uint count;
-
         }
 
 
@@ -68,17 +70,14 @@ contract Yousamaritan_LP
 
             mapping(uint=>allInvestments) investment;
             mapping(uint=>ref_data) referralLevel;
-            address[] team;
+            address[] directs;
 
             uint noOfInvestment;
             uint totalInvestment;
             uint totalWithdraw_reward;
             bool investBefore;
             address upliner;
-            bool isCso;
-            bool isEmb;
-            uint Cso_Earning;
-            uint Emb_Earning;
+
         }
 
 
@@ -86,9 +85,10 @@ contract Yousamaritan_LP
         {
             uint timeframe;
             uint APR;
-            uint minim
+            uint minimum_amount;
         }
-          struct refStatement_data1{
+
+         struct refStatement_data1{
 
             address buyer;
             uint invest_amount;
@@ -101,10 +101,15 @@ contract Yousamaritan_LP
 
         mapping (address => mapping (uint=>refStatement_data1[])) public user_statement;
         uint public perSMTPrice;
-        constructor(){
+        uint[4]  firstlevelpercentage = [1.5 ether,6 ether,18 ether,36 ether];
+        uint[2]  levelpercentage = [0.3 ether,0.1 ether];
+
+        mapping(uint=>Data) public percentageOf;
+
+        constructor(uint _id){
             
             owner=msg.sender;        
-
+            id=_id;
             details[0].timeframe = 90 minutes;
             details[1].timeframe = 180 minutes;
             details[2].timeframe = 270 minutes;
@@ -114,152 +119,22 @@ contract Yousamaritan_LP
             details[1].APR = 36;
             details[2].APR = 81;
             details[3].APR = 144;
+                        
+            details[0].minimum_amount = 120 ether;
+            details[1].minimum_amount = 1200 ether;
+            details[2].minimum_amount = 12000 ether;
+            details[3].minimum_amount = 120000 ether;
 
         }
 
-       
-        function sendRewardToReferrals(address investor,uint _investedAmount)  internal  //this is the freferral function to transfer the reawards to referrals
-        { 
-
-            address temp = investor;       
-            uint[] memory percentage = new uint[](5);
-            percentage[0] = 5;
-            percentage[1] = 3;
-            percentage[2] = 1;
-
-            uint remaining = _investedAmount;
-
-
-
-                for(uint i=0;i<3;i++)
-                {
-                    
-                    if(user[temp].upliner!=address(0))
-                    {
-
-                        temp = user[temp].upliner;
-                        uint reward1 = ((percentage[i] * 1 ether) * _investedAmount)/100 ether;
-                        
-                        if(doublDirectPercentage_promo && i==0)
-                        {
-                            reward1*=2;
-                        }
-
-                        refStatement_data1 memory temp_data; 
-                        temp_data.buyer=investor;
-                        temp_data.invest_amount =  _investedAmount ;
-                        temp_data.commission = reward1 ;
-                        temp_data.time=block.timestamp;
-
-                        user_statement[temp][i].push(temp_data);
-
-
-                    
-                            Token(Staking_token).transferFrom(msg.sender,temp,reward1);
-
-
-                        user[temp].referralLevel[i].earning +=  reward1 ;                  
-                        user[temp].referralLevel[i].count++;
-                        remaining-=reward1;
-                    } 
-                    else
-                    {
-                        break;
-                    }
-
-                }
-                
-                temp = user[investor].upliner; 
-                uint j=21;
-                for(uint i=0;i<21;i++)
-                {
-
-                    
-                    if(temp != address(0) &&  user[temp].isCso)
-                    {
-
-
-
-
-                        uint reward1 = ( 2 ether * _investedAmount)/100 ether;
-                        
-                        refStatement_data1 memory temp_data; 
-                        temp_data.buyer=investor;
-                        temp_data.invest_amount =_investedAmount ;
-                        temp_data.commission = reward1 ;
-                        temp_data.time=block.timestamp;
-                        user_statement[temp][3].push(temp_data);
-
-
-                        Token(Staking_token).transferFrom(msg.sender,temp,reward1);
-
-                        
-
-                        j=i+1;
-                        user[temp].Cso_Earning+=  reward1  ;                  
-                        remaining -= reward1;  
-                        i=21;              
-                    } 
-                    else
-                    {
-                        temp = user[temp].upliner;
-                    }
-
-                }
-
-                temp = user[investor].upliner; 
-
-                for(uint i=0;i<j;i++)
-                {
-
-                    
-                    if(temp != address(0) &&  user[temp].isEmb)
-                    {
-
-
-
-                        uint reward1 = ( 1 ether * _investedAmount)/100 ether;
-
-                        refStatement_data1 memory temp_data; 
-                        temp_data.buyer=investor;
-                        temp_data.invest_amount = _investedAmount ;
-                        temp_data.commission =  reward1 ;
-                        temp_data.time=block.timestamp;
-
-                        user_statement[temp][4].push(temp_data);
-
-
-
-                        Token(Staking_token).transferFrom(msg.sender,temp,reward1);
-
-                        
-
-                        user[temp].Emb_Earning+=  reward1 ;               
-                        remaining-=reward1;  
-                        i=j;              
-                    } 
-                    else
-                    {
-                        temp = user[temp].upliner;
-                    }
-
-                }
-
-                       
-            
-
-            
-                                       
-                Token(Staking_token).transferFrom(msg.sender,owner,remaining);
-
-            
-
-        }
+    
 
         function Stake(uint _investedamount,uint choose_val,address _referral) external  returns(bool success)
         {
             require(details[choose_val].APR > 0," apr iss");
-            require(_investedamount > 0,"value is not greater than 0");    
+            require(_investedamount > details[choose_val].minimum_amount);    
+
+            // require(_investedamount > (details[choose_val].minimum_amount/get_Curr_pertokenPrice())*(10**18));    
             require(Token(Staking_token).allowance(msg.sender,address(this))>=_investedamount,"allowance");
 
             if(user[msg.sender].investBefore == false)
@@ -272,16 +147,28 @@ contract Yousamaritan_LP
                     if(msg.sender!=owner)
                     {
                         user[msg.sender].upliner = owner;
-
+                        user[owner].directs.push(msg.sender);
                     }
-
                 }
                 else
                 {
                    
                     user[msg.sender].upliner = _referral;
-                    user[_referral].team.push(msg.sender);
+                    user[_referral].directs.push(msg.sender);
                 
+                }
+                address temp=user[msg.sender].upliner;
+                for(uint i=0;i<3;i++)
+                {
+                    if(temp!=address(0))
+                    {
+                        user[temp].referralLevel[i].count++;
+                        temp=user[temp].upliner;
+
+                    }
+                    else{
+                        break;
+                    }
                 }
             }
 
@@ -293,13 +180,30 @@ contract Yousamaritan_LP
             user[msg.sender].investment[num].investmentNum=num;
             user[msg.sender].investment[num].apr=details[choose_val].APR;
             user[msg.sender].investment[num].timeframe=(details[choose_val].timeframe/per_day_divider);  
-            user[msg.sender].investment[num].perTokenPrice=get_pertokenPrice();  
+            user[msg.sender].investment[num].perTokenPrice=get_Curr_pertokenPrice(); 
+            if(details[choose_val].timeframe == 90 minutes) 
+            {
+                user[msg.sender].investment[num].level1_percentage=firstlevelpercentage[0];  
+            }
+            else if(details[choose_val].timeframe == 180 minutes) 
+            {
+                user[msg.sender].investment[num].level1_percentage=firstlevelpercentage[1];  
+            }
+            else if(details[choose_val].timeframe == 270 minutes) 
+            {
+                user[msg.sender].investment[num].level1_percentage=firstlevelpercentage[2];  
+            }
+            else if(details[choose_val].timeframe == 360 minutes) 
+            {
+                user[msg.sender].investment[num].level1_percentage=firstlevelpercentage[3];  
+            }
+            user[msg.sender].investment[num].level2_percentage=levelpercentage[0];  
+            user[msg.sender].investment[num].level3_percentage=levelpercentage[1];  
 
             user[msg.sender].totalInvestment+=_investedamount;
             user[msg.sender].noOfInvestment++;
             totalbusiness+=_investedamount;
-            sendRewardToReferrals( msg.sender, _investedamount);
-
+            Token(Staking_token).transferFrom(msg.sender,owner,_investedamount);
 
             return true;
             
@@ -329,8 +233,7 @@ contract Yousamaritan_LP
                 depTime=depTime/per_day_divider; //1 day
                 if(depTime>0)
                 {
-                     rew  =  (((user[msg.sender].investment[i].investedAmount * ((user[msg.sender].investment[i].apr) *10**18) )/ (100*10**18) )/(user[msg.sender].investment[i].timeframe));
-
+                    rew  =  ((((user[msg.sender].investment[i].investedAmount * ((user[msg.sender].investment[i].apr) *10**18) )/ (100*10**18) )/(user[msg.sender].investment[i].timeframe)) * user[msg.sender].investment[i].perTokenPrice) / (10**18);
 
                     totalReward += depTime * rew;
                 }
@@ -370,7 +273,7 @@ contract Yousamaritan_LP
                 depTime=depTime/per_day_divider; //1 day
                 if(depTime>0)
                 {
-                     rew  =  (((user[_add].investment[i].investedAmount * ((user[_add].investment[i].apr) *10**18) )/ (100*10**18) )/(user[_add].investment[i].timeframe));
+                     rew  =  ((((user[_add].investment[i].investedAmount * ((user[_add].investment[i].apr) *10**18) )/ (100*10**18) )/(user[_add].investment[i].timeframe)) * user[msg.sender].investment[i].perTokenPrice) / (10**18);
 
 
                     totalReward += depTime * rew;
@@ -381,16 +284,93 @@ contract Yousamaritan_LP
         }
 
 
+        function Level_earning(address inv) public view returns( uint[3] memory arr1,uint  )
+        { 
 
-        function withdrawReward() external returns (bool success){
-            uint Total_reward = get_TotalReward();
-            require(Total_reward>0,"you dont have rewards to withdrawn");         
-            uint withdraw_fee=(Total_reward*(withdrawFee))/(100*10**18);
-            Token(Staking_token).transfer(owner,withdraw_fee);            
+            uint[3] memory levelRewards;
+
+            uint calc_rew; 
+            address[] memory direct_members = user[inv].directs;
+            uint next_member_count;
+            uint totalEarned;
+
+
+                for(uint j=0; j < 3;j++) //levels
+                {            
+                    for( uint k = 0;k < direct_members.length;k++) //members
+                    {   
+
+                        next_member_count+=user[direct_members[k]].directs.length;
+                        for(uint i=0;i<user[direct_members[k]].noOfInvestment;i++)
+                        {
+                            uint temp_amount = user[direct_members[k]].investment[i].investedAmount;
+
+                            if(j==0)
+                            {
+                                if(user[direct_members[k]].investment[i].apr==9)
+                                {
+                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[0]) ) / (100 ether) );
+                                }
+                                else if(user[direct_members[k]].investment[i].apr==36)
+                                {
+                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[1]) ) / (100 ether) );
+                                }                                
+                                else if(user[direct_members[k]].investment[i].apr==81)
+                                {
+                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[2]) ) / (100 ether) );
+                                }
+                                else if(user[direct_members[k]].investment[i].apr==144)
+                                {
+                                    calc_rew +=  ((temp_amount * (firstlevelpercentage[3]) ) / (100 ether) );
+                                }
+                            }
+                            else
+                            {
+                                calc_rew +=  ((temp_amount * (levelpercentage[j]) ) / (100 ether) );
+                            }
+
+                        }
+                        
+
+
+                    }
+
+                    totalEarned+=calc_rew;
+                    levelRewards[j]=calc_rew;
+                    calc_rew=0;
+
+                    address[] memory next_members=new address[](next_member_count) ;
+
+                    for( uint m = 0;m < direct_members.length;m++) //members
+                    {   
+                        for( uint n = 0; n < user[direct_members[m]].directs.length; n++) //members
+                        {   
+                            next_members[calc_rew]= user[direct_members[m]].directs[n];
+                            calc_rew++;
+                        }
+                    }
+                    direct_members=next_members; 
+                    next_member_count=0;
+                    calc_rew=0;
+
+
+                    
+                }
+
+            return (levelRewards,totalEarned);
+        }
+
+        function withdrawReward(uint level_rew, uint _id) external returns (bool success)
+        {
+            require(id==_id);
+            uint Total_reward = get_TotalReward() + level_rew;
+            require(Total_reward>0);         
+            uint withdraw_fee=(Total_reward*(withdrawFee))/(100*10**6);
+            Token(Reward_Token).transfer(owner,withdraw_fee);            
             Total_reward = Total_reward-withdraw_fee;
 
-            Token(Reward_Token).transfer(msg.sender,(Total_reward * get_pertokenPrice())/10**18);                        
-            user[msg.sender].totalWithdraw_reward+=Total_reward;
+            Token(Reward_Token).transfer(msg.sender,Total_reward);                        
+            user[msg.sender].totalWithdraw_reward += Total_reward;
 
             return true;
 
@@ -407,13 +387,14 @@ contract Yousamaritan_LP
             require(!user[msg.sender].investment[num].unstake ,"you have withdrawn");
             uint amount=user[msg.sender].investment[num].investedAmount;
 
-           if(user[msg.sender].investment[num].withdrawnTime > block.timestamp)
+            if(user[msg.sender].investment[num].withdrawnTime > block.timestamp)
             {
                 uint penalty_fee=(amount*(penalty))/(100*10**18);
-                Token(Staking_token).transfer(owner,penalty_fee);            
+                Token(Reward_Token).transfer(owner,(penalty_fee * user[msg.sender].investment[num].perTokenPrice) /10**18);            
                 amount=amount-penalty_fee;
             }
-            Token(Staking_token).transfer(msg.sender,amount);             
+
+            Token(Reward_Token).transfer(msg.sender,(amount * user[msg.sender].investment[num].perTokenPrice) /10**18);             
           
             user[msg.sender].investment[num].unstake =true;    
             user[msg.sender].investment[num].unstakeTime =block.timestamp;    
@@ -430,9 +411,10 @@ contract Yousamaritan_LP
             return user[msg.sender].totalInvestment;
 
         }
+
         function get_pending_Rew(address add, uint num) public view returns(uint)
         {  
-            return (user[add].investment[num].investedAmount * (user[add].investment[num].apr * 1 ether)/ 100 ether) - (getReward_perInv(num,add));
+            return (((user[add].investment[num].investedAmount * (user[add].investment[num].apr * 1 ether)/ 100 ether)* user[msg.sender].investment[num].perTokenPrice) / (10**18)) - (getReward_perInv(num,add));
         }
 
         function getAll_investments() public view returns (allInvestments[] memory Invested)
@@ -477,6 +459,7 @@ contract Yousamaritan_LP
 
         }
 
+
         function getAll_investments_forReward() public view returns (allInvestments[] memory Invested)
         { 
             uint num = user[msg.sender].noOfInvestment;
@@ -509,23 +492,6 @@ contract Yousamaritan_LP
             return Invested;
 
         }
-
-
-        function referralLevel_earning(address _add) public view returns( uint[] memory arr1 )
-        {
-            uint[] memory referralLevels_reward=new uint[](3);
-            for(uint i=0;i<3;i++)
-            {
-               
-                referralLevels_reward[i] = user[_add].referralLevel[i].earning;
-
-
-            }
-            return referralLevels_reward ;
-
-
-        }
-
 
 
         function referralLevel_count(address _add) public view returns( uint[] memory _arr )
@@ -573,7 +539,6 @@ contract Yousamaritan_LP
         }
 
 
-
        function withdrawFunds(uint _amount)  public
         {
             require(msg.sender==owner);
@@ -584,33 +549,8 @@ contract Yousamaritan_LP
             Token(Staking_token).transfer(owner,_amount); 
         }
 
-        function set_CSO(address _add)  public
-        {
-            require(msg.sender==owner);
-            user[_add].isCso=true;
 
-            Cso_arr.push(_add); 
-        }
-        
-        function set_EMB(address _add)  public
-        {
-            require(msg.sender==owner);
-            user[_add].isEmb=true;
-
-            Emb_arr.push(_add); 
-        }
-
-        function getallCso() public view returns( address[] memory _arr )
-        {
-            return Cso_arr ;
-        }
-
-
-        function getallEmb() public view returns( address[] memory _arr )
-        {
-            return Emb_arr ;
-        }
-        function get_pertokenPrice() public view returns( uint price )
+        function get_Curr_pertokenPrice() public view returns( uint price )
         {
             if(perSMTPrice==0)
             {
@@ -622,6 +562,8 @@ contract Yousamaritan_LP
             }
         }
 
+
+
         function setSMTPrice(uint val) public
         {
             require(msg.sender==owner);
@@ -629,6 +571,47 @@ contract Yousamaritan_LP
             perSMTPrice=val;
 
         }
+       function setID(uint val) public
+        {
+            require(msg.sender==owner);
 
+            id=val;
+
+        }
+        function Updtae_penaltyFeePercentage(uint val)  public
+        {
+            require(msg.sender==owner);
+            penalty = val;
+        }
+        
+        function Updtae_withdrawFeePercentage(uint val)  public
+        {
+            require(msg.sender==owner);
+            withdrawFee = val;
+        }
+
+        function Updtae_staking_APR(uint no,uint val)  public
+        {
+            require(msg.sender==owner);
+            details[no].APR=val;
+        }
+        
+        function Updtae_staking_MinInvestment(uint no,uint val)  public
+        {
+            require(msg.sender==owner);
+            details[no].minimum_amount=val;
+        }
+
+        function Updtae_FirstRefLevelPercentage(uint no,uint val)  public
+        {
+            require(msg.sender==owner);
+            firstlevelpercentage[no]=val;
+        }   
+
+        function Updtae_RefLevelPercentage(uint no,uint val)  public
+        {
+            require(msg.sender==owner);
+            levelpercentage[no]=val;
+        }   
 
     } 
