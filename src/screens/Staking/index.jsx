@@ -539,7 +539,15 @@ useEffect(()=>{
       alert("kindly connect your wallet ");
       return;
     }
-
+    if(Number(totalInvestment)==0)
+    {
+      if(ref_add=="0x0000000000000000000000000000000000000000" )
+        {
+          alert("You can't stake without a referral link because this is a community base project.");
+          return;
+        }
+    }
+    
     if(stakeAmount==0 )
     {
       alert("kindly write amount to stake ");
@@ -636,7 +644,7 @@ useEffect(()=>{
               <img src={require("../../assets/images/c5.png")} />
               </div>
               <p className="tw-m-0  tw-text-textColor tw-text-2xl tw-font-bold">
-              Smaritan
+              Samaritan
               </p>
             </div>
 
@@ -754,7 +762,7 @@ useEffect(()=>{
           <div className="tw-flex px-4 tw-py-3 tw-border-b  tw-border-textColor tw-justify-between tw-items-center">
             <img src={require("../../assets/images/c5.png")} />
             <p className="tw-m-0  tw-text-textColor tw-text-2xl tw-font-bold">
-            Smaritan
+            Samaritan
             </p>
           </div>
 
@@ -829,7 +837,7 @@ useEffect(()=>{
           <div className="tw-flex tw-mb-4 px-4 tw-py-3 tw-border-b  tw-border-textColor tw-justify-between tw-items-center">
             <img src={require("../../assets/images/c5.png")} />
             <p className="tw-m-0  tw-text-textColor tw-text-2xl tw-font-bold">
-            Smaritan
+            Samaritan
             </p>
           </div>
 
