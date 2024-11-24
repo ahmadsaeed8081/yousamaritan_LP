@@ -303,15 +303,15 @@ useEffect(()=>
        let ref_count = await staking_contract.methods.referralLevel_count(address).call(); 
 
        let data = await staking_contract.methods.Level_earning(address).call();    
-       let l1_statement = await staking_contract.methods.get_refStatement(address,0).call();    
-       let l2_statement = await staking_contract.methods.get_refStatement(address,1).call();    
-       let l3_statement = await staking_contract.methods.get_refStatement(address,2).call();    
-       let l4_statement = await staking_contract.methods.get_refStatement(address,3).call();    
-       let l5_statement = await staking_contract.methods.get_refStatement(address,4).call();      
+      //  let l1_statement = await staking_contract.methods.get_refStatement(address,0).call();    
+      //  let l2_statement = await staking_contract.methods.get_refStatement(address,1).call();    
+      //  let l3_statement = await staking_contract.methods.get_refStatement(address,2).call();    
+      //  let l4_statement = await staking_contract.methods.get_refStatement(address,3).call();    
+      //  let l5_statement = await staking_contract.methods.get_refStatement(address,4).call();      
         perTokenPrice = await staking_contract.methods.get_Curr_pertokenPrice().call();   
 
         set_totalLevelEarning(data[1])
-       setStatment(l1_statement,l2_statement,l3_statement,l4_statement,l5_statement,user[7],user[8],perTokenPrice)
+      //  setStatment(l1_statement,l2_statement,l3_statement,l4_statement,l5_statement,user[7],user[8],perTokenPrice)
        setHeroData(user?user[1]:0,totalEarning,user?user[2]:0,perTokenPrice,data[1])
        set_refEarning(data.arr1)
        set_refCount(ref_count)
