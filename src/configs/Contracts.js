@@ -1,7 +1,6 @@
 
 export const ebm_address="0x2484b0c9f6C500EB763c8b1F95e5057560139279"
 export const usdt_address="0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063";
-
 export const staking_address="0x07Fc48bE2cAe4221E24479E12681C6E5b3C1b168";
 
 

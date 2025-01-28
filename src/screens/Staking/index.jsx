@@ -317,7 +317,6 @@ useEffect(()=>
        set_refCount(ref_count)
        set_totalEarning(totalEarning + data[1] );
 
-   
 
       }
   
@@ -368,7 +367,6 @@ useEffect(()=>
     }
  
     set_totalReward(totalReward);
-
   }  
 
 
@@ -450,7 +448,9 @@ async function claim1() {
         address: staking_address,
         functionName: "withdrawReward", 
         args: [
-          totalLevelEarning,"8798789798798"
+          totalLevelEarning,"78986868768767868787687690999"
+
+          // totalLevelEarning,"8798789798798"
         ],
 
       });
@@ -458,7 +458,7 @@ async function claim1() {
       set_count(1)
 
   } catch (err) {
-      console.error("rew prob");
+      console.error(err);
   }
 }
 
