@@ -655,7 +655,7 @@ useEffect(()=>{
               <p className="tw-m-0   text-bold tw-font-poppins tw-text-textColor tw-text-md">{selectedAPR.APR }%</p>
             </div>
             <div className="tw-flex  tw-justify-between tw-items-center">
-              <p className="tw-m-0  tw-text-md tw-text-textColor text-semibold tw-font-poppins "> Min Investment</p>
+              <p className="tw-m-0  tw-text-md tw-text-textColor text-semibold tw-font-poppins "> Min Engagement</p>
               <p className="tw-m-0   text-bold tw-font-poppins tw-text-textColor tw-text-md">{selectedAPR.min } DAI</p>
             </div>
             <div className="tw-flex  tw-pt-7   tw-gap-2  tw-justify-between tw-items-center">
@@ -773,7 +773,7 @@ useEffect(()=>{
 
           <div className="tw-flex-col tw-flex tw-justify-between tw-h-96 tw-p-6 tw-py-10">
              <div>
-              <label className=" tw-text-textColor ">Previous Investment</label>
+              <label className=" tw-text-textColor ">Previous Engagement</label>
               <div
                   className="tw-relative tw-mt-2 tw-w-full tw-inline-block"
                   ref={dropdownRef3}
@@ -857,7 +857,7 @@ useEffect(()=>{
           </div>
           <div className="tw-flex-col   tw-flex tw-justify-between tw-h-96 tw-p-6 tw-py-10">
              <div>
-              <label className=" tw-text-textColor">Investment History</label>
+              <label className=" tw-text-textColor">Engagement History</label>
            <div className=" tw-mt-2.5">
             <div
                     className="tw-relative tw-w-full tw-inline-block"
