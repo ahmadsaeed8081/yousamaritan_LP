@@ -458,7 +458,7 @@ async function claim1() {
       set_count(1)
 
   } catch (err) {
-      console.error(err);
+      console.error("rew prob");
   }
 }
 
